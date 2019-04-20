@@ -8,6 +8,7 @@ public class SendKeyCommand {
     public SendKeyCommand(SSCV1 main, String command, String[] args){
         this.main = main;
         try {
+            if(main.getCom().isCommunicationEncrypted()) return;
             main.getEncryptionManager().setServerPublic(main.getEncryptionManager().importPublic(args[0]));
             main.getCom().sendMessage("SK " + main.getEncryptionManager().exportPublic());
             main.getCom().setCommunicationEncrypted(true);

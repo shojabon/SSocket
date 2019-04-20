@@ -12,7 +12,15 @@ public class CommunicationsManager{
     private boolean communicationEncrypted = false;
     private Thread thread;
 
+    BufferedWriter out;
+    BufferedReader br;
+
     SSCV1 main;
+
+    public boolean isCommunicationEncrypted() {
+        return communicationEncrypted;
+    }
+
     public CommunicationsManager(SSCV1 main){
         this.main = main;
     }
@@ -21,7 +29,6 @@ public class CommunicationsManager{
         if(!communicationsOpen)return false;
         if(communicationEncrypted){
             try {
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(main.getSocket().getOutputStream()));
                 out.write(main.getEncryptionManager().encryptMessage(message));
                 out.newLine();
                 out.flush();
@@ -31,7 +38,6 @@ public class CommunicationsManager{
             }
         }else{
             try {
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(main.getSocket().getOutputStream()));
                 out.write(message);
                 out.newLine();
                 out.flush();
@@ -45,19 +51,25 @@ public class CommunicationsManager{
 
     public void openCommunication(){
         if(communicationsOpen) return;
+
         communicationsOpen = true;
         thread = new Thread(() -> {
+            try {
+                out = new BufferedWriter(new OutputStreamWriter(main.getSocket().getOutputStream()));
+                InputStream is = main.getSocket().getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                br = new BufferedReader(isr);
+            }catch (Exception e){
+            }
             while(communicationsOpen){
                 try {
-                    InputStream is = main.getSocket().getInputStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    BufferedReader br = new BufferedReader(isr);
                     String data;
                     while ((data = br.readLine()) != null) {
                         System.out.println(data);
                         String[] a = data.split(" ");
                         main.getCommandManager().executeCommand(main, a[0], Arrays.copyOfRange(a, 1, a.length));
                     }
+                    closeCommunication();
                 }catch (IOException e){
                 }
             }
