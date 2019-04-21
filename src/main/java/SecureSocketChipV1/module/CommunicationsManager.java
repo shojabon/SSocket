@@ -65,7 +65,6 @@ public class CommunicationsManager{
                 try {
                     String data;
                     while ((data = br.readLine()) != null) {
-                        System.out.println(data);
                         String[] a = data.split(" ");
                         main.getCommandManager().executeCommand(main, a[0], Arrays.copyOfRange(a, 1, a.length));
                     }
