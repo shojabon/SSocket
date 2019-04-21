@@ -1,5 +1,6 @@
 package SecureSocketChipV1;
 
+import SecureSocketChipV1.interfaces.SSCEvent;
 import SecureSocketChipV1.interfaces.SSCVCommand;
 import SecureSocketChipV1.module.BaseCommand.SendKeyCommand;
 import SecureSocketChipV1.module.CommandManager;
@@ -8,6 +9,8 @@ import SecureSocketChipV1.module.EncryptionManager;
 import SecureSocketChipV1.module.ProtocolManager;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SSCV1 implements SSCVCommand{
 
@@ -18,7 +21,9 @@ public class SSCV1 implements SSCVCommand{
     ProtocolManager protocolManager;
 
     CommandManager commandManager;
-    SSCVCommand commandHandler;
+    List<SSCVCommand> commandHandler = new ArrayList<>();
+    List<SSCEvent> eventHandler = new ArrayList<>();
+
     SSCVCommand baseCommandHandler;
 
     public SSCV1(Socket socket){
@@ -46,12 +51,20 @@ public class SSCV1 implements SSCVCommand{
         return commandManager;
     }
 
-    public SSCVCommand getCommandHandler() {
+    public List<SSCVCommand> getCommandHandler() {
         return commandHandler;
     }
 
-    public void setCommandHandler(SSCVCommand commands){
-        this.commandHandler = commands;
+    public List<SSCEvent> getEventHandler() {
+        return eventHandler;
+    }
+
+    public void registerCommandHandler(SSCEvent event){
+        eventHandler.add(event);
+    }
+
+    public void addCommandHandler(SSCVCommand commands){
+        this.commandHandler.add(commands);
     }
 
     public Socket getSocket() {
