@@ -1,6 +1,8 @@
 package SecureSocketChipV1.module;
 
+import SecureSocketChipV1.EventClasses.SSCClientDisconnectEvent;
 import SecureSocketChipV1.SSCV1;
+import SecureSocketChipV1.interfaces.SSCEvent;
 import SecureSocketChipV1.interfaces.SSCVCommand;
 
 import javax.imageio.IIOException;
@@ -78,6 +80,9 @@ public class CommunicationsManager{
 
     public void closeCommunication(){
         if(!communicationsOpen) return;
+        for(SSCEvent event: main.getEventHandler()){
+            event.onClientDisconnect(new SSCClientDisconnectEvent(main));
+        }
         communicationsOpen = false;
     }
 
