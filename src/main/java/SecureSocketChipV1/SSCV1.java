@@ -41,7 +41,7 @@ public class SSCV1 implements SSCVCommand{
         this.protocolManager = new ProtocolManager(this);
     }
 
-    public SSCV1(Socket socket, SSCV1Mode mode, SSCEvent event){
+    public SSCV1(Socket socket, SSCV1Mode mode, SSCEvent event) {
         this.socket = socket;
         this.mode = mode;
         this.communicationsManager = new CommunicationsManager(this);
@@ -51,7 +51,7 @@ public class SSCV1 implements SSCVCommand{
         this.baseCommandHandler = this;
         this.protocolManager = new ProtocolManager(this);
         eventHandler.add(event);
-        for(SSCEvent even: eventHandler){
+        for (SSCEvent even : eventHandler) {
             even.onClientConnect(new SSCClientConnectEvent(this));
         }
     }
@@ -65,7 +65,7 @@ public class SSCV1 implements SSCVCommand{
             }
         }
         if(args.length == 1){
-            if(command.equalsIgnoreCase("SK") && mode == SSCV1Mode.SERVER){
+            if(command.equalsIgnoreCase("SK")){
                 new SendKeyCommand(this, command, args);
                 return;
             }
@@ -99,6 +99,10 @@ public class SSCV1 implements SSCVCommand{
 
     public CommunicationsManager getCom() {
         return communicationsManager;
+    }
+
+    public SSCV1Mode getMode() {
+        return mode;
     }
 
     public EncryptionManager getEncryptionManager() {
