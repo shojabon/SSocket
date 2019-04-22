@@ -1,5 +1,6 @@
 package SecureSocketChipV1;
 
+import SecureSocketChipV1.Enums.SSCV1Mode;
 import SecureSocketChipV1.EventClasses.SSCClientConnectEvent;
 import SecureSocketChipV1.interfaces.SSCEvent;
 import SecureSocketChipV1.interfaces.SSCVCommand;
@@ -27,8 +28,11 @@ public class SSCV1 implements SSCVCommand{
 
     SSCVCommand baseCommandHandler;
 
-    public SSCV1(Socket socket){
+    SSCV1Mode mode;
+
+    public SSCV1(Socket socket, SSCV1Mode mode){
         this.socket = socket;
+        this.mode = mode;
         this.communicationsManager = new CommunicationsManager(this);
         this.communicationsManager.openCommunication();
         this.commandManager = new CommandManager(this);
@@ -37,8 +41,9 @@ public class SSCV1 implements SSCVCommand{
         this.protocolManager = new ProtocolManager(this);
     }
 
-    public SSCV1(Socket socket, SSCEvent event){
+    public SSCV1(Socket socket, SSCV1Mode mode, SSCEvent event){
         this.socket = socket;
+        this.mode = mode;
         this.communicationsManager = new CommunicationsManager(this);
         this.communicationsManager.openCommunication();
         this.commandManager = new CommandManager(this);
@@ -60,7 +65,7 @@ public class SSCV1 implements SSCVCommand{
             }
         }
         if(args.length == 1){
-            if(command.equalsIgnoreCase("SK")){
+            if(command.equalsIgnoreCase("SK") && mode == SSCV1Mode.SERVER){
                 new SendKeyCommand(this, command, args);
                 return;
             }
