@@ -37,11 +37,10 @@ public class CommandManager {
 
     private UUID parseUUID(String uuid){
         try {
-            UUID reUUID = UUID.fromString(uuid);
+            return UUID.fromString(uuid);
         }catch (Exception e){
             return null;
         }
-        return null;
     }
 
 
